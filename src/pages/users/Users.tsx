@@ -1,8 +1,15 @@
+import { Breadcrumb } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+
 const Users = () => {
   return (
-    <div>
-      <h1>Users Page</h1>
-    </div>
+    <>
+      <Breadcrumb
+        separator={<RightOutlined />}
+        items={[{ title: <Link to="/">Dashboard</Link> }, { title: 'Users' }]}
+      />
+    </>
   );
 };
 
