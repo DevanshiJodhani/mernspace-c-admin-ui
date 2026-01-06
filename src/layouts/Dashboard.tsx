@@ -11,7 +11,7 @@ import {
   theme,
 } from 'antd';
 import Icon, { BellFilled } from '@ant-design/icons';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import Logo from '../components/icons/Logo';
 import Home from '../components/icons/Home';
 import UserIcon from '../components/icons/UserIcon';
@@ -100,7 +100,12 @@ const Dashboard = () => {
               background: colorBgContainer,
             }}>
             <Flex gap="middle" align="start" justify="space-between">
-              <Badge text="Global" status="success" />
+              <Badge
+                text={
+                  user.role === 'admin' ? 'You are an admin' : user.tenant?.name
+                }
+                status="success"
+              />
 
               <Space size={16}>
                 <Badge dot={true}>
