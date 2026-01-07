@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Drawer, Space, Table } from 'antd';
+import { Form, Breadcrumb, Button, Drawer, Space, Table, theme } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -7,6 +7,7 @@ import type { User } from '../../types';
 import { useAuthStore } from '../../store';
 import UsersFilter from './UsersFilter';
 import { useState } from 'react';
+import UserForm from './forms/UserForm';
 
 const columns = [
   {
@@ -41,6 +42,10 @@ const columns = [
 ];
 
 const Users = () => {
+  const {
+    token: { colorBgLayout },
+  } = theme.useToken();
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const {
@@ -89,6 +94,7 @@ const Users = () => {
         <Drawer
           title="Create User"
           width={720}
+          styles={{ body: { background: colorBgLayout } }}
           destroyOnClose={true}
           open={drawerOpen}
           onClose={() => {
@@ -100,8 +106,9 @@ const Users = () => {
               <Button type="primary">Submit</Button>
             </Space>
           }>
-          <p>Some contents</p>
-          <p>Some contents</p>
+          <Form layout="vertical">
+            <UserForm />
+          </Form>
         </Drawer>
       </Space>
     </>
