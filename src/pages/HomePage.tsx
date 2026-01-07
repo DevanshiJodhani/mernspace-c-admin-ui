@@ -67,6 +67,7 @@ function HomePage() {
                       width: 40,
                       height: 40,
                       borderRadius: 10,
+                      background: '#DCFCE7',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -94,6 +95,7 @@ function HomePage() {
                       width: 40,
                       height: 40,
                       borderRadius: 10,
+                      background: '#E0EDFF',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -120,14 +122,15 @@ function HomePage() {
               <Space>
                 <div
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 40,
+                    height: 40,
+                    background: '#E0EDFF',
                     borderRadius: 8,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#3B82F6',
-                    fontSize: 16,
+                    fontSize: 20,
                   }}>
                   <BarChartOutlined />
                 </div>
@@ -178,14 +181,15 @@ function HomePage() {
               <Space>
                 <div
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 40,
+                    height: 40,
                     borderRadius: 8,
+                    background: '#FFEDE5',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#F97316',
-                    fontSize: 16,
+                    fontSize: 20,
                   }}>
                   <InboxOutlined />
                 </div>
