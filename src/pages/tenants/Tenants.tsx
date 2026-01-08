@@ -1,10 +1,11 @@
-import { Breadcrumb, Button, Space, Table } from 'antd';
+import { Breadcrumb, Button, Drawer, Space, Table } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { Tenant } from '../../types';
 import { getTenants } from '../../http/api';
 import TenantFilter from './TenantFilter';
+import { useState } from 'react';
 
 const columns = [
   {
@@ -25,6 +26,8 @@ const columns = [
 ];
 
 const Tenants = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const {
     data: tenants,
     isLoading,
@@ -56,12 +59,31 @@ const Tenants = () => {
           onFilterChange={(filterName: string, filterValue: string) => {
             console.log(filterName, filterValue);
           }}>
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setDrawerOpen(true)}>
             Add Restaurant
           </Button>
         </TenantFilter>
 
         <Table columns={columns} dataSource={tenants} rowKey="id" />
+
+        <Drawer
+          title="Create Restaurant"
+          width={720}
+          destroyOnHidden={true}
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          extra={
+            <Space>
+              <Button>Cancel</Button>
+              <Button type="primary">Submit</Button>
+            </Space>
+          }>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Drawer>
       </Space>
     </>
   );
