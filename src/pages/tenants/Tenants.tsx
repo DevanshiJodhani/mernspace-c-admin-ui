@@ -1,12 +1,13 @@
 import { Breadcrumb, Button, Drawer, Form, Space, Table, theme } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import type { Tenant } from '../../types';
-import { getTenants } from '../../http/api';
+import { Link, Navigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { CreateTenantData, Tenant } from '../../types';
+import { createTenant, getTenants } from '../../http/api';
 import TenantFilter from './TenantFilter';
 import { useState } from 'react';
 import TenantForm from './forms/TenantForm';
+import { useAuthStore } from '../../store';
 
 const columns = [
   {
@@ -27,6 +28,9 @@ const columns = [
 ];
 
 const Tenants = () => {
+  const [form] = Form.useForm();
+  const queryClient = useQueryClient();
+
   const {
     token: { colorBgLayout },
   } = theme.useToken();
@@ -45,6 +49,30 @@ const Tenants = () => {
       return res.data.data;
     },
   });
+
+  const { user } = useAuthStore();
+
+  const { mutate: tenantMutate } = useMutation({
+    mutationKey: ['tenant'],
+    mutationFn: async (data: CreateTenantData) =>
+      createTenant(data).then((res) => res.data),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['tenants'] });
+      return;
+    },
+  });
+
+  const onHandleSubmit = async () => {
+    await form.validateFields();
+    console.log('Form Values', form.getFieldsValue());
+    await tenantMutate(form.getFieldsValue());
+    form.resetFields();
+    setDrawerOpen(false);
+  };
+
+  if (user?.role !== 'admin') {
+    return <Navigate to="/" replace={true} />;
+  }
 
   return (
     <>
@@ -80,14 +108,25 @@ const Tenants = () => {
           styles={{ body: { background: colorBgLayout } }}
           destroyOnHidden={true}
           open={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          onClose={() => {
+            form.resetFields();
+            setDrawerOpen(false);
+          }}
           extra={
             <Space>
-              <Button>Cancel</Button>
-              <Button type="primary">Submit</Button>
+              <Button
+                onClick={() => {
+                  setDrawerOpen(false);
+                  form.resetFields();
+                }}>
+                Cancel
+              </Button>
+              <Button type="primary" onClick={onHandleSubmit}>
+                Submit
+              </Button>
             </Space>
           }>
-          <Form layout="vertical">
+          <Form layout="vertical" form={form}>
             <TenantForm />
           </Form>
         </Drawer>
