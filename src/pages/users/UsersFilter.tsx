@@ -15,6 +15,7 @@ const UsersFilter = ({ onFilterChange, children }: UsersFilterProps) => {
               <Input.Search
                 placeholder="Search"
                 allowClear={true}
+                size='large'
                 onChange={(e) => onFilterChange('searchFilter', e.target.value)}
               />
             </Col>
@@ -22,6 +23,7 @@ const UsersFilter = ({ onFilterChange, children }: UsersFilterProps) => {
               <Select
                 placeholder="Select Role"
                 allowClear={true}
+                size='large'
                 onChange={(selectedItem) =>
                   onFilterChange('roleFilter', selectedItem)
                 }
@@ -35,6 +37,7 @@ const UsersFilter = ({ onFilterChange, children }: UsersFilterProps) => {
               <Select
                 placeholder="Status"
                 allowClear={true}
+                size='large'
                 onChange={(selectedItem) =>
                   onFilterChange('statusFilter', selectedItem)
                 }
