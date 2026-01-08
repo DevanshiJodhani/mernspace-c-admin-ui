@@ -1,25 +1,31 @@
-import { Button, Card, Col, Form, Input, Row } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Card, Col, Form, Input, Row } from 'antd';
 
-const TenantFilter = () => {
+type TenantFilterProps = {
+  children: React.ReactNode;
+  onFilterChange: (filterName: string, value: string) => void;
+};
+
+const TenantFilter = ({ children, onFilterChange }: TenantFilterProps) => {
   return (
     <Card>
       <Form>
-        <Row>
+        <Row justify="space-between">
           <Col span={16}>
-            <Form.Item name="q">
-              <Input.Search
-                placeholder="Search"
-                allowClear={true}
-                size="large"
-                style={{ width: '100%' }}
-              />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col span={24}>
+                <Input.Search
+                  allowClear={true}
+                  placeholder="Search"
+                  size="large"
+                  onChange={(e) =>
+                    onFilterChange('searchFilter', e.target.value)
+                  }
+                />
+              </Col>
+            </Row>
           </Col>
           <Col span={8} style={{ display: 'flex', justifyContent: 'end' }}>
-            <Button type="primary" icon={<PlusOutlined />}>
-              Add Tenant
-            </Button>
+            {children}
           </Col>
         </Row>
       </Form>

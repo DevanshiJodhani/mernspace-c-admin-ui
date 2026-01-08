@@ -1,5 +1,5 @@
-import { Breadcrumb, Space, Table } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, Space, Table } from 'antd';
+import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { Tenant } from '../../types';
@@ -52,9 +52,16 @@ const Tenants = () => {
         {isLoading && <div>Loading...</div>}
         {isError && <div>{error.message}</div>}
 
-        <TenantFilter />
+        <TenantFilter
+          onFilterChange={(filterName: string, filterValue: string) => {
+            console.log(filterName, filterValue);
+          }}>
+          <Button type="primary" icon={<PlusOutlined />}>
+            Add Restaurant
+          </Button>
+        </TenantFilter>
 
-        <Table columns={columns} dataSource={tenants} />
+        <Table columns={columns} dataSource={tenants} rowKey="id" />
       </Space>
     </>
   );
