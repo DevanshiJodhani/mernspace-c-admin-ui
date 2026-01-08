@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Drawer, Space, Table } from 'antd';
+import { Breadcrumb, Button, Drawer, Form, Space, Table, theme } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import type { Tenant } from '../../types';
 import { getTenants } from '../../http/api';
 import TenantFilter from './TenantFilter';
 import { useState } from 'react';
+import TenantForm from './forms/TenantForm';
 
 const columns = [
   {
@@ -26,6 +27,10 @@ const columns = [
 ];
 
 const Tenants = () => {
+  const {
+    token: { colorBgLayout },
+  } = theme.useToken();
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const {
@@ -72,6 +77,7 @@ const Tenants = () => {
         <Drawer
           title="Create Restaurant"
           width={720}
+          styles={{ body: { background: colorBgLayout } }}
           destroyOnHidden={true}
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
@@ -81,8 +87,9 @@ const Tenants = () => {
               <Button type="primary">Submit</Button>
             </Space>
           }>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <Form layout="vertical">
+            <TenantForm />
+          </Form>
         </Drawer>
       </Space>
     </>
