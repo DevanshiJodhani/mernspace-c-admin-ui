@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import {
   keepPreviousData,
   useMutation,
@@ -22,7 +23,7 @@ import { createUser, getUsers } from '../../http/api';
 import type { CreateUserData, FieldData, User } from '../../types';
 import { useAuthStore } from '../../store';
 import UsersFilter from './UsersFilter';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import UserForm from './forms/UserForm';
 import { PER_PAGE } from '../../constants';
 
@@ -97,6 +98,7 @@ const Users = () => {
 
   const { user } = useAuthStore();
 
+  // Fetch create user mutation
   const { mutate: userMutate } = useMutation({
     mutationKey: ['user'],
     mutationFn: async (data: CreateUserData) =>
@@ -107,6 +109,7 @@ const Users = () => {
     },
   });
 
+  // Handle form submit
   const onHandleSubmit = async () => {
     await form.validateFields();
     console.log('Form Values', form.getFieldsValue());
@@ -115,6 +118,15 @@ const Users = () => {
     setDrawerOpen(false);
   };
 
+
+  // Debounced query update
+  const debouncedQUpdate = useMemo(() => {
+    return debounce((value: string | undefined) => {
+      setQueryParams((prev) => ({ ...prev, q: value }));
+    }, 1000);
+  }, []);
+
+  // Handle filter change
   const onFilterChange = (changedFields: FieldData[]) => {
     console.log(changedFields);
 
@@ -124,10 +136,14 @@ const Users = () => {
       }))
       .reduce((acc, item) => ({ ...acc, ...item }), {});
 
-    // Send into query params
-    setQueryParams((prev) => ({ ...prev, ...changedFilterFields }));
+    if ('q' in changedFilterFields) {
+      debouncedQUpdate(changedFilterFields.q);
+    } else {
+      setQueryParams((prev) => ({ ...prev, ...changedFilterFields }));
+    }
   };
 
+  // Redirect if not admin
   if (user?.role !== 'admin') {
     return <Navigate to="/" replace={true} />;
   }
