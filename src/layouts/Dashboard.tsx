@@ -8,6 +8,7 @@ import {
   Layout,
   Menu,
   Space,
+  Tag,
   theme,
 } from 'antd';
 import Icon, { BellFilled } from '@ant-design/icons';
@@ -110,13 +111,25 @@ const Dashboard = () => {
               paddingRight: '16px',
               background: colorBgContainer,
             }}>
-            <Flex gap="middle" align="start" justify="space-between">
-              <Badge
-                text={
-                  user.role === 'admin' ? 'You are an admin' : user.tenant?.name
-                }
-                status="success"
-              />
+            <Flex gap="middle" align="center" justify="space-between">
+              <Tag
+                style={{
+                  background: '#fff1f0',
+
+                  borderRadius: 999,
+                  padding: '8px 16px',
+                  border: 'none',
+                }}>
+                <Badge
+                  style={{ color: '#ff4d4f', fontWeight: 600 }}
+                  text={
+                    user.role === 'admin' ?
+                      'You are an admin'
+                    : user.tenant?.name
+                  }
+                  status="success"
+                />
+              </Tag>
 
               <Space size={16}>
                 <Badge dot={true}>
