@@ -57,6 +57,14 @@ const columns = [
     dataIndex: 'role',
     key: 'role',
   },
+  {
+    title: 'Restaurant',
+    dataIndex: 'tenant',
+    key: 'tenant',
+    render: (_text: string, record: User) => {
+      return <div>{record.tenant?.name}</div>;
+    },
+  },
 ];
 
 const Users = () => {
@@ -117,7 +125,6 @@ const Users = () => {
     form.resetFields();
     setDrawerOpen(false);
   };
-
 
   // Debounced query update
   const debouncedQUpdate = useMemo(() => {
