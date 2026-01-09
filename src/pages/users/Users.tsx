@@ -1,7 +1,23 @@
-import { Form, Breadcrumb, Button, Drawer, Space, Table, theme } from 'antd';
+import {
+  Form,
+  Breadcrumb,
+  Button,
+  Drawer,
+  Space,
+  Table,
+  theme,
+  Spin,
+  Flex,
+  Typography,
+} from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { createUser, getUsers } from '../../http/api';
 import type { CreateUserData, User } from '../../types';
 import { useAuthStore } from '../../store';
@@ -58,7 +74,7 @@ const Users = () => {
 
   const {
     data: users,
-    isLoading,
+    isFetching,
     isError,
     error,
   } = useQuery({
@@ -70,6 +86,7 @@ const Users = () => {
 
       return getUsers(queryString).then((res) => res.data);
     },
+    placeholderData: keepPreviousData,
   });
 
   const { user } = useAuthStore();
@@ -99,13 +116,20 @@ const Users = () => {
   return (
     <>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Breadcrumb
-          separator={<RightOutlined />}
-          items={[{ title: <Link to="/">Dashboard</Link> }, { title: 'Users' }]}
-        />
+        <Flex justify="space-between">
+          <Breadcrumb
+            separator={<RightOutlined />}
+            items={[
+              { title: <Link to="/">Dashboard</Link> },
+              { title: 'Users' },
+            ]}
+          />
 
-        {isLoading && <div>Loading...</div>}
-        {isError && <div>{error.message}</div>}
+          {isFetching && <Spin />}
+          {isError && (
+            <Typography.Text type="danger">{error.message}</Typography.Text>
+          )}
+        </Flex>
 
         <UsersFilter
           onFilterChange={(filterName: string, filterValue: string) => {
