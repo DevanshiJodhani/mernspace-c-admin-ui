@@ -6,11 +6,11 @@ import type { Tenant } from '../../../types';
 const UserForm = () => {
   const { data: tenants } = useQuery({
     queryKey: ['tenants'],
-    queryFn: async () => {
-      const res = await getTenants();
-      return res.data.data;
+    queryFn: () => {
+      return getTenants(`perPage=100&currentPage=1`).then((res) => res.data);
     },
   });
+
   return (
     <Row>
       <Col span={24}>
@@ -124,7 +124,7 @@ const UserForm = () => {
                     onChange={() => {}}
                     placeholder="Select Restaurant"
                     size="large">
-                    {tenants?.map((tenant: Tenant) => (
+                    {tenants?.data.map((tenant: Tenant) => (
                       <Select.Option value={tenant.id} key={tenant.id}>
                         {tenant.name}
                       </Select.Option>
