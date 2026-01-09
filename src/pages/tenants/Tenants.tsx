@@ -2,7 +2,7 @@ import { Breadcrumb, Button, Drawer, Form, Space, Table, theme } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CreateTenantData, Tenant } from '../../types';
+import type { CreateTenantData } from '../../types';
 import { createTenant, getTenants } from '../../http/api';
 import TenantFilter from './TenantFilter';
 import { useState } from 'react';
@@ -42,11 +42,11 @@ const Tenants = () => {
     isLoading,
     isError,
     error,
-  } = useQuery<Tenant[]>({
+  } = useQuery({
     queryKey: ['tenants'],
     queryFn: async () => {
       const res = await getTenants();
-      return res.data.data;
+      return res.data;
     },
   });
 
@@ -100,7 +100,7 @@ const Tenants = () => {
           </Button>
         </TenantFilter>
 
-        <Table columns={columns} dataSource={tenants} rowKey="id" />
+        <Table columns={columns} dataSource={tenants?.data} rowKey="id" />
 
         <Drawer
           title="Create Restaurant"
