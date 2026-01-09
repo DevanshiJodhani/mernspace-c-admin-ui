@@ -2,12 +2,38 @@ import { useQuery } from '@tanstack/react-query';
 import { Form, Card, Col, Row, Input, Space, Select } from 'antd';
 import { getTenants } from '../../../http/api';
 import type { Tenant } from '../../../types';
+import { useMemo, useState } from 'react';
+import { PER_PAGE } from '../../../constants';
+import { debounce } from 'lodash';
 
 const UserForm = () => {
-  const { data: tenants } = useQuery({
-    queryKey: ['tenants'],
+  const [queryParams, setQueryParams] = useState({
+    perPage: PER_PAGE,
+    currentPage: 1,
+  });
+
+  // debounce search
+  const debouncedQUpdate = useMemo(
+    () =>
+      debounce((value: string | undefined) => {
+        setQueryParams((prev) => ({ ...prev, q: value }));
+      }, 400),
+    []
+  );
+
+  // fetch tenants
+  const { data: tenants, isFetching } = useQuery({
+    queryKey: ['tenants', queryParams],
     queryFn: () => {
-      return getTenants(`perPage=100&currentPage=1`).then((res) => res.data);
+      const filteredParams = Object.fromEntries(
+        Object.entries(queryParams).filter((item) => !!item[1])
+      );
+
+      const queryString = new URLSearchParams(
+        filteredParams as unknown as Record<string, string>
+      ).toString();
+
+      return getTenants(queryString).then((res) => res.data);
     },
   });
 
@@ -119,13 +145,19 @@ const UserForm = () => {
                     },
                   ]}>
                   <Select
-                    style={{ width: '100%' }}
-                    allowClear={true}
-                    onChange={() => {}}
-                    placeholder="Select Restaurant"
-                    size="large">
-                    {tenants?.data.map((tenant: Tenant) => (
-                      <Select.Option value={tenant.id} key={tenant.id}>
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Search restaurant"
+                    filterOption={false}
+                    loading={isFetching}
+                    onSearch={(value) => debouncedQUpdate(value)}
+                    onClear={() => debouncedQUpdate(undefined)}
+                    notFoundContent={
+                      isFetching ? 'Searching...' : 'No restaurant found'
+                    }>
+                    {tenants?.data?.map((tenant: Tenant) => (
+                      <Select.Option key={tenant.id} value={tenant.id}>
                         {tenant.name}
                       </Select.Option>
                     ))}
