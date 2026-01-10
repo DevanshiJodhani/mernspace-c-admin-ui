@@ -16,7 +16,7 @@ const UserForm = () => {
   const debouncedQUpdate = useMemo(
     () =>
       debounce((value: string | undefined) => {
-        setQueryParams((prev) => ({ ...prev, q: value }));
+        setQueryParams((prev) => ({ ...prev, q: value, currentPage: 1 }));
       }, 500),
     []
   );
