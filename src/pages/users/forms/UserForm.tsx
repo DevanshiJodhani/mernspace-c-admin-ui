@@ -17,7 +17,7 @@ const UserForm = () => {
     () =>
       debounce((value: string | undefined) => {
         setQueryParams((prev) => ({ ...prev, q: value }));
-      }, 400),
+      }, 500),
     []
   );
 
