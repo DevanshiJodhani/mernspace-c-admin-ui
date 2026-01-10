@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Form, Card, Col, Row, Input, Space, Select } from 'antd';
+import { Form, Card, Col, Row, Input, Space, Select, Spin } from 'antd';
 import { getTenants } from '../../../http/api';
 import type { Tenant } from '../../../types';
 import { useMemo, useState } from 'react';
@@ -154,7 +154,7 @@ const UserForm = () => {
                     onSearch={(value) => debouncedQUpdate(value)}
                     onClear={() => debouncedQUpdate(undefined)}
                     notFoundContent={
-                      isFetching ? 'Searching...' : 'No restaurant found'
+                      isFetching ? <Spin /> : 'No restaurant found'
                     }>
                     {tenants?.data?.map((tenant: Tenant) => (
                       <Select.Option key={tenant.id} value={tenant.id}>
