@@ -7,6 +7,8 @@ import { PER_PAGE } from '../../../constants';
 import { debounce } from 'lodash';
 
 const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
+  const selectedRole = Form.useWatch('role');
+
   const [queryParams, setQueryParams] = useState({
     perPage: PER_PAGE,
     currentPage: 1,
@@ -132,41 +134,42 @@ const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
                     size="large">
                     <Select.Option value="admin">Admin</Select.Option>
                     <Select.Option value="manager">Manager</Select.Option>
-                    <Select.Option value="customer">Customer</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
 
-              <Col span={12}>
-                <Form.Item
-                  label="Restaurant"
-                  name="tenantId"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Restaurant is required',
-                    },
-                  ]}>
-                  <Select
-                    showSearch
-                    allowClear
-                    size="large"
-                    placeholder="Search restaurant"
-                    filterOption={false}
-                    loading={isFetching}
-                    onSearch={(value) => debouncedQUpdate(value)}
-                    onClear={() => debouncedQUpdate(undefined)}
-                    notFoundContent={
-                      isFetching ? <Spin /> : 'No restaurant found'
-                    }>
-                    {tenants?.data?.map((tenant: Tenant) => (
-                      <Select.Option key={tenant.id} value={tenant.id}>
-                        {tenant.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
+              {selectedRole === 'manager' && (
+                <Col span={12}>
+                  <Form.Item
+                    label="Restaurant"
+                    name="tenantId"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Restaurant is required',
+                      },
+                    ]}>
+                    <Select
+                      showSearch
+                      allowClear
+                      size="large"
+                      placeholder="Search restaurant"
+                      filterOption={false}
+                      loading={isFetching}
+                      onSearch={(value) => debouncedQUpdate(value)}
+                      onClear={() => debouncedQUpdate(undefined)}
+                      notFoundContent={
+                        isFetching ? <Spin /> : 'No restaurant found'
+                      }>
+                      {tenants?.data?.map((tenant: Tenant) => (
+                        <Select.Option key={tenant.id} value={tenant.id}>
+                          {tenant.name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
             </Row>
           </Card>
         </Space>
