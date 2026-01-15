@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { PER_PAGE } from '../../../constants';
 import { debounce } from 'lodash';
 
-const UserForm = () => {
+const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
   const [queryParams, setQueryParams] = useState({
     perPage: PER_PAGE,
     currentPage: 1,
@@ -91,23 +91,25 @@ const UserForm = () => {
             </Row>
           </Card>
 
-          <Card title="Security Information">
-            <Row gutter={20}>
-              <Col span={12}>
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Password is required',
-                    },
-                  ]}>
-                  <Input size="large" type="password" />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
+          {!isEditMode && (
+            <Card title="Security Information">
+              <Row gutter={20}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Password is required',
+                      },
+                    ]}>
+                    <Input size="large" type="password" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+          )}
 
           <Card title="Auth Information">
             <Row gutter={20}>
@@ -122,6 +124,7 @@ const UserForm = () => {
                     },
                   ]}>
                   <Select
+                    id="selectBoxInUserForm"
                     style={{ width: '100%' }}
                     allowClear={true}
                     onChange={() => {}}
