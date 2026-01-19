@@ -72,7 +72,7 @@ const Users = () => {
   const [filterForm] = Form.useForm();
 
   const [currentEditingUser, setCurrentEditingUser] = useState<User | null>(
-    null
+    null,
   );
 
   const queryClient = useQueryClient();
@@ -105,11 +105,11 @@ const Users = () => {
     queryKey: ['users', queryParams],
     queryFn: () => {
       const filteredParams = Object.fromEntries(
-        Object.entries(queryParams).filter((item) => !!item[1])
+        Object.entries(queryParams).filter((item) => !!item[1]),
       );
 
       const queryString = new URLSearchParams(
-        filteredParams as unknown as Record<string, string>
+        filteredParams as unknown as Record<string, string>,
       ).toString();
 
       return getUsers(queryString).then((res) => res.data);
@@ -166,8 +166,6 @@ const Users = () => {
 
   // Handle filter change
   const onFilterChange = (changedFields: FieldData[]) => {
-    console.log(changedFields);
-
     const changedFilterFields = changedFields
       .map((item) => ({
         [item.name[0]]: item.value,
