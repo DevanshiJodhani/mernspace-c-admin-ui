@@ -27,8 +27,9 @@ export const updateUser = (user: CreateUserData, id: string) =>
 export const updateTenant = (tenant: CreateTenantData, id: number) =>
   api.patch(`${AUTH_SERVICE}/tenants/${id}`, tenant);
 
-
-
 // Catalog service
 
 export const getCategories = () => api.get(`${CATALOG_SERVICE}/categories`);
+
+export const getProducts = (queryParams: string) =>
+  api.get(`${CATALOG_SERVICE}/products?${queryParams}`);
