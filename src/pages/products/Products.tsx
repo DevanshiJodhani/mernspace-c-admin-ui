@@ -8,16 +8,18 @@ import {
   Image,
   Typography,
   Tag,
+  Spin,
 } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
 import { PER_PAGE } from '../../constants';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getProducts } from '../../http/api';
-import type { Product } from '../../types';
+import type { FieldData, Product } from '../../types';
 import { format } from 'date-fns';
+import { debounce } from 'lodash';
 
 const columns = [
   {
@@ -79,10 +81,11 @@ const Products = () => {
   const [filterForm] = Form.useForm();
 
   const [queryParams, setQueryParams] = useState({
-    perPage: PER_PAGE,
-    currentPage: 1,
+    limit: PER_PAGE,
+    page: 1,
   });
 
+  // Fetching Products
   const {
     data: products,
     isFetching,
@@ -104,6 +107,32 @@ const Products = () => {
     placeholderData: keepPreviousData,
   });
 
+  // Debounced query update
+  const debouncedQUpdate = useMemo(() => {
+    return debounce((value: string | undefined) => {
+      setQueryParams((prev) => ({ ...prev, q: value, page: 1 }));
+    }, 500);
+  }, []);
+
+  // Handle filter change
+  const onFilterChange = (changedFields: FieldData[]) => {
+    const changedFilterFields = changedFields
+      .map((item) => ({
+        [item.name[0]]: item.value,
+      }))
+      .reduce((acc, item) => ({ ...acc, ...item }), {});
+
+    if ('q' in changedFilterFields) {
+      debouncedQUpdate(changedFilterFields.q);
+    } else {
+      setQueryParams((prev) => ({
+        ...prev,
+        ...changedFilterFields,
+        page: 1,
+      }));
+    }
+  };
+
   return (
     <>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -115,9 +144,14 @@ const Products = () => {
               { title: 'Products' },
             ]}
           />
+
+          {isFetching && <Spin />}
+          {isError && (
+            <Typography.Text type="danger">{error.message}</Typography.Text>
+          )}
         </Flex>
 
-        <Form form={filterForm} onFieldsChange={() => {}}>
+        <Form form={filterForm} onFieldsChange={onFilterChange}>
           <ProductsFilter>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => {}}>
               Add Product
@@ -145,13 +179,13 @@ const Products = () => {
           rowKey={'id'}
           pagination={{
             total: products?.total,
-            pageSize: queryParams.perPage,
-            current: queryParams.currentPage,
+            pageSize: queryParams.limit,
+            current: queryParams.page,
             onChange: (page) => {
               setQueryParams((prev) => {
                 return {
                   ...prev,
-                  currentPage: page,
+                  page: page,
                 };
               });
             },
