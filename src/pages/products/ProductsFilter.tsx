@@ -12,12 +12,15 @@ import {
 } from 'antd';
 import { getCategories, getTenants } from '../../http/api';
 import type { Category, Tenant } from '../../types';
+import { useAuthStore } from '../../store';
 
 type ProductsFilterProps = {
   children?: React.ReactNode;
 };
 
 const ProductsFilter = ({ children }: ProductsFilterProps) => {
+  const { user } = useAuthStore();
+
   // Fetching Restautants
   const { data: restaurants } = useQuery({
     queryKey: ['restaurants'],
@@ -64,23 +67,28 @@ const ProductsFilter = ({ children }: ProductsFilterProps) => {
               </Form.Item>
             </Col>
 
-            <Col span={6}>
-              <Form.Item name="tenantId">
-                <Select
-                  placeholder="Select Restaurant"
-                  allowClear={true}
-                  size="large"
-                  style={{ width: '100%' }}>
-                  {restaurants?.data.data.map((restaurant: Tenant) => {
-                    return (
-                      <Select.Option key={restaurant.id} value={restaurant.id}>
-                        {restaurant.name}
-                      </Select.Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Col>
+            {user!.role === 'admin' && (
+              <Col span={6}>
+                <Form.Item name="tenantId">
+                  <Select
+                    placeholder="Select Restaurant"
+                    allowClear={true}
+                    size="large"
+                    style={{ width: '100%' }}>
+                    {restaurants?.data.data.map((restaurant: Tenant) => {
+                      return (
+                        <Select.Option
+                          key={restaurant.id}
+                          value={restaurant.id}>
+                          {restaurant.name}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
             <Col span={6}>
               <Space>
                 <Form.Item name="isPublish">
