@@ -9,6 +9,8 @@ import {
   Typography,
   Tag,
   Spin,
+  Drawer,
+  theme,
 } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -21,6 +23,7 @@ import type { FieldData, Product } from '../../types';
 import { format } from 'date-fns';
 import { debounce } from 'lodash';
 import { useAuthStore } from '../../store';
+import ProductForm from './forms/ProductForm';
 
 const columns = [
   {
@@ -79,14 +82,21 @@ const columns = [
 ];
 
 const Products = () => {
+  const [form] = Form.useForm();
   const [filterForm] = Form.useForm();
   const { user } = useAuthStore();
+
+  const {
+    token: { colorBgLayout },
+  } = theme.useToken();
 
   const [queryParams, setQueryParams] = useState({
     limit: PER_PAGE,
     page: 1,
     tenantId: user!.role === 'manager' ? user?.tenant?.id : undefined,
   });
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Fetching Products
   const {
@@ -136,6 +146,11 @@ const Products = () => {
     }
   };
 
+  //  Handle form submit
+  const onHandleSubmit = () => {
+    console.log('Submit');
+  };
+
   return (
     <>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -156,7 +171,12 @@ const Products = () => {
 
         <Form form={filterForm} onFieldsChange={onFilterChange}>
           <ProductsFilter>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => {}}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setDrawerOpen(true);
+              }}>
               Add Product
             </Button>
           </ProductsFilter>
@@ -198,6 +218,35 @@ const Products = () => {
             },
           }}
         />
+
+        <Drawer
+          title={'Create Product'}
+          width={720}
+          styles={{ body: { background: colorBgLayout } }}
+          destroyOnClose={true}
+          open={drawerOpen}
+          onClose={() => {
+            form.resetFields();
+            setDrawerOpen(false);
+          }}
+          extra={
+            <Space>
+              <Button
+                onClick={() => {
+                  setDrawerOpen(false);
+                  form.resetFields();
+                }}>
+                Cancle
+              </Button>
+              <Button type="primary" onClick={onHandleSubmit}>
+                Submit
+              </Button>
+            </Space>
+          }>
+          <Form layout="vertical" form={form}>
+            <ProductForm />
+          </Form>
+        </Drawer>
       </Space>
     </>
   );

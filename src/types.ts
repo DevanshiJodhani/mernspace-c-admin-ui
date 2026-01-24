@@ -37,10 +37,26 @@ export type FieldData = {
   value?: string;
 };
 
-export type Category = {
+export interface PriceConfiguration {
+  [key: string]: {
+    priceType: 'base' | 'aditional';
+    availableOptions: string[];
+  };
+}
+
+export interface Attribute {
+  name: string;
+  widgetType: 'switch' | 'radio';
+  defaultValue: string;
+  availableOptopns: string[];
+}
+
+export interface Category {
   _id: string;
   name: string;
-};
+  priceConfiguration: PriceConfiguration;
+  attributes: Attribute[];
+}
 
 export type Product = {
   _id: string;
