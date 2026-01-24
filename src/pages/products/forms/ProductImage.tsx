@@ -7,12 +7,21 @@ import {
   type UploadProps,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const ProductImage = () => {
+const ProductImage = ({ initialImage }: { initialImage: string }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const isInitialSet = useRef(false);
+  useEffect(() => {
+    if (initialImage && !isInitialSet.current) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setImageUrl(initialImage);
+      isInitialSet.current = true;
+    }
+  }, [initialImage]);
 
   const uploaderConfig: UploadProps = {
     name: 'file',

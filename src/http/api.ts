@@ -31,10 +31,18 @@ export const updateTenant = (tenant: CreateTenantData, id: number) =>
 
 export const getCategories = () => api.get(`${CATALOG_SERVICE}/categories`);
 
+export const getCategory = (id: string) =>
+  api.get(`${CATALOG_SERVICE}/categories/${id}`);
+
 export const getProducts = (queryParams: string) =>
   api.get(`${CATALOG_SERVICE}/products?${queryParams}`);
 
 export const createProduct = (product: FormData) =>
   api.post(`${CATALOG_SERVICE}/products`, product, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const updateProduct = (product: FormData, id: string) =>
+  api.put(`${CATALOG_SERVICE}/products/${id}`, product, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

@@ -58,11 +58,22 @@ export interface Category {
   attributes: Attribute[];
 }
 
+export type CategoryResponse = {
+  category: Category;
+};
+
+export type ProductAttribute = {
+  name: string;
+  value: string | boolean;
+};
+
 export type Product = {
   _id: string;
   name: string;
   image: string;
   description: string;
+  priceConfiguration: PriceConfiguration;
+  attributes: ProductAttribute[];
   category: Category;
   isPublish: boolean;
   createdAt: string;

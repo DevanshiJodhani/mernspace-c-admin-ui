@@ -8,6 +8,7 @@ import {
   Space,
   Switch,
   Typography,
+  type FormInstance,
 } from 'antd';
 
 import type { Category, Tenant } from '../../../types';
@@ -18,9 +19,11 @@ import Attributes from './Attributes';
 import ProductImage from './ProductImage';
 import { useAuthStore } from '../../../store';
 
-const ProductForm = () => {
+const ProductForm = ({ form }: { form: FormInstance }) => {
   const { user } = useAuthStore();
   const selectedCategory = Form.useWatch('categoryId');
+
+  const currenImage = Form.useWatch('image', form);
 
   // Fetching Categories
   const { data: categories } = useQuery({
@@ -74,9 +77,7 @@ const ProductForm = () => {
                     size="large"
                     style={{ width: '100%' }}>
                     {categories?.data?.categories?.map((category: Category) => (
-                      <Select.Option
-                        key={category._id}
-                        value={JSON.stringify(category)}>
+                      <Select.Option key={category._id} value={category._id}>
                         {category.name}
                       </Select.Option>
                     ))}
@@ -108,7 +109,7 @@ const ProductForm = () => {
           <Card title="Product image">
             <Row gutter={20}>
               <Col span={12}>
-                <ProductImage />
+                <ProductImage initialImage={currenImage} />
               </Col>
             </Row>
           </Card>
@@ -135,7 +136,7 @@ const ProductForm = () => {
                         return (
                           <Select.Option
                             key={restaurant.id}
-                            value={restaurant.id}>
+                            value={String(restaurant.id)}>
                             {restaurant.name}
                           </Select.Option>
                         );
