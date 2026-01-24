@@ -39,7 +39,7 @@ const ProductForm = () => {
   return (
     <Row>
       <Col span={24}>
-        <Space direction="vertical" size="large">
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <Card title="Product Information">
             <Row gutter={20}>
               <Col span={12}>

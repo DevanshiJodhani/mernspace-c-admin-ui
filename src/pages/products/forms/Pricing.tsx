@@ -40,7 +40,7 @@ const Pricing = ({ selectedCategory }: PricingProps) => {
                               priceType: configurationValue.priceType,
                             }),
                           ]}>
-                          <InputNumber addonAfter="₹"/>
+                          <InputNumber addonAfter="₹" style={{ width: '100%' }}/>
                         </Form.Item>
                       </Col>
                     );
