@@ -34,13 +34,13 @@ const getMenuItem = (role: string) => {
 
     {
       key: '/products',
-      icon: <Icon component={BasketIcon} />,
+      icon: <Icon component={foodIcon} />,
       label: <NavLink to="/products">Products</NavLink>,
     },
     {
       key: '/promos',
-      icon: <Icon component={GiftIcon} />,
-      label: <NavLink to="/promos">Promos</NavLink>,
+      icon: <Icon component={BasketIcon} />,
+      label: <NavLink to="/orders">Orders</NavLink>,
     },
   ];
 
