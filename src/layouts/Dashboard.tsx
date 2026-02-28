@@ -18,7 +18,6 @@ import Home from '../components/icons/Home';
 import UserIcon from '../components/icons/UserIcon';
 import { foodIcon } from '../components/icons/FoodIcon';
 import BasketIcon from '../components/icons/BasketIcon';
-import GiftIcon from '../components/icons/GiftIcon';
 import { useMutation } from '@tanstack/react-query';
 import { logout } from '../http/api';
 

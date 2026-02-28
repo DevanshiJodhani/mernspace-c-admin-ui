@@ -1,7 +1,12 @@
 import { Breadcrumb, Flex, message, Space, Table, Tag, Typography } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { type Order, OrderEvents, PaymentMode, PaymentStatus } from '../../types';
+import {
+  type Order,
+  OrderEvents,
+  PaymentMode,
+  PaymentStatus,
+} from '../../types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getOrders } from '../../http/api';
 import { format } from 'date-fns';
@@ -145,7 +150,7 @@ const Orders = () => {
       socket.off('join');
       socket.off('order-update');
     };
-  }, []);
+  }, [messageApi, queryClient, user?.tenant]);
 
   const { data: orders } = useQuery({
     queryKey: ['orders'],
