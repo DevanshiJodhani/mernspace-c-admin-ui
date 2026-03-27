@@ -105,13 +105,16 @@ const columns = [
 ];
 
 // todo: make this dynamic.
-const TENANT_ID = 10;
+// const TENANT_ID = 10;
 
 const Orders = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
   const [messageApi, contextHolder] = message.useMessage();
+  const [selectedTenant] = React.useState<string | null>(
+    null,
+  );
 
   React.useEffect(() => {
     if (user?.tenant) {
@@ -155,11 +158,15 @@ const Orders = () => {
   const { data: orders } = useQuery({
     queryKey: ['orders'],
     queryFn: () => {
-      // If admin user then make sure to send tenantID, or tenant id from selected filter.
-      const queryString = new URLSearchParams({
-        tenantId: String(TENANT_ID),
-      }).toString();
-      return getOrders(queryString).then((res) => res.data);
+      let query = '';
+
+      if (user?.role === 'admin' && selectedTenant) {
+        query = new URLSearchParams({
+          tenantId: selectedTenant,
+        }).toString();
+      }
+
+      return getOrders(query).then((res) => res.data);
     },
   });
 
